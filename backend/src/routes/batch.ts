@@ -13,21 +13,21 @@ async function runBatch(jobId: string): Promise<void> {
     const state = jobsMap.get(jobId);
     if (!state) return;
     state.job.status = "processing";
-    const totalWork = Math.max(1, state.job.images.length * state.job.filters.length);
-    let completedSteps = 0;
+    const totalImages = Math.max(1, state.job.images.length);
+    let completedImages = 0;
     for (const imageId of state.job.images) {
       if (jobsMap.get(jobId)?.job.status === "failed") return;
       const image = storageService.findById(imageId);
       if (!image) {
         state.results.push({ imageId, success: false, error: "Image not found", processingTimeMs: 0 });
-        completedSteps += state.job.filters.length;
-        state.job.progress = Math.min(100, Math.round((completedSteps / totalWork) * 100));
+        completedImages += 1;
+        state.job.progress = Math.min(100, Math.round((completedImages / totalImages) * 100));
         continue;
       }
       const result = await processImage(image, state.job.filters);
       state.results.push(result);
-      completedSteps += state.job.filters.length;
-      state.job.progress = Math.min(100, Math.round((completedSteps / totalWork) * 100));
+      completedImages += 1;
+      state.job.progress = Math.min(100, Math.round((completedImages / totalImages) * 100));
     }
     state.job.status = "completed";
     state.job.completedAt = new Date();

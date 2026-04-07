@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Router } from "express";
+import sharp from "sharp";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import type { ImageMetadata } from "../../../shared/types/index.js";
@@ -33,13 +34,16 @@ imagesRouter.post("/upload", upload.single("file"), async (req, res, next) => {
     const storedFilePath = path.join(uploadDirectory, storedFilename);
     fs.renameSync(req.file.path, storedFilePath);
 
+    // Use sharp to inspect final stored file dimensions.
+    const sharpMetadata = await sharp(storedFilePath).metadata();
+
     const metadata: ImageMetadata = {
       id: imageId,
       filename: storedFilename,
       originalName: sanitizeFilename(req.file.originalname),
       mimeType: req.file.mimetype,
-      width: 0,
-      height: 0,
+      width: sharpMetadata.width ?? 0,
+      height: sharpMetadata.height ?? 0,
       sizeBytes: req.file.size,
       createdAt: new Date(),
       updatedAt: new Date(),
