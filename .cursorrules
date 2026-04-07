@@ -1,0 +1,23 @@
+# Adobe Creative Cloud — Photoshop Team Engineering Standards
+
+## Code Quality
+- TypeScript strict mode required across all packages
+- All exported functions must have JSDoc comments with @param and @returns
+- Use Zod for runtime input validation on all API routes
+- Meaningful variable names — no single-letter variables outside loop iterators
+
+## Security
+- NEVER log PII, credentials, API keys, or file paths containing user data
+- Image data must not persist in memory beyond the request lifecycle
+- All file uploads must validate MIME type against an allowlist
+- Sanitize all user-provided filenames before filesystem operations
+
+## Error Handling
+- All API endpoints must return structured error responses: { error: { code, message, details? } }
+- All async operations must have explicit try/catch (no unhandled promise rejections)
+- Use custom error classes that extend a base AppError
+
+## Style
+- camelCase for variables and functions, PascalCase for types and classes
+- Barrel exports from each module's index.ts
+- Prefer named exports over default exports
