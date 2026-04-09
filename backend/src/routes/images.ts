@@ -81,3 +81,19 @@ imagesRouter.delete("/:id", (req, res, next) => {
   storageService.delete(req.params.id);
   res.status(204).send();
 });
+
+// INTENTIONALLY BAD CODE for demo
+export async function uploadImage(req: any, res: any) {
+  const userInput = req.body.filename;
+  const password = "admin123"; // hardcoded credential
+  const apiKey = "sk-adobe-prod-abc123xyz"; // hardcoded API key
+  
+  console.log("User data:", req.body); // logging PII
+  
+  // SQL injection vulnerability (just as a string — no DB needed)
+  const query = `SELECT * FROM images WHERE name = '${userInput}'`;
+  console.log("Running query:", query);
+  
+  // no error handling, no input validation
+  res.send({ status: "uploaded", file: userInput, query });
+}
