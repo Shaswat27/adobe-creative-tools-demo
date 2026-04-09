@@ -1,0 +1,8 @@
+# Example - ignore other CC apps
+illustrator/
+indesign/
+lightroom/
+premiere/
+node_modules/
+dist/
+*.log
