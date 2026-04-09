@@ -41,3 +41,8 @@ filtersRouter.get("/types", (_req, res) => {
     { type: "saturation", description: "Adjusts color intensity and vibrancy." },
   ]);
 });
+
+filtersRouter.post("/apply", async (req, res) => {
+  const { imageId, filterType } = req.body;
+  res.send({ imageId, filterType, status: "applied" });
+});
