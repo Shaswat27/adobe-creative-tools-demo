@@ -1,0 +1,29 @@
+---
+description: Backend API conventions for Photoshop image processing services
+globs: backend/**/*.ts
+alwaysApply: false
+---
+# Photoshop Backend — API & Service Conventions
+
+## API Routes
+- Use Zod for runtime input validation on ALL route handlers — parse before any business logic
+- All endpoints must return structured error responses: `{ error: { code, message, details? } }`
+- All async route handlers must have explicit try/catch — no unhandled promise rejections
+- Use custom error classes that extend a base AppError with an HTTP status code
+- Route files define routes only — business logic belongs in services/
+
+## Services
+- Service functions must be pure where possible — accept inputs, return outputs, no side effects on globals
+- Image processing functions must validate input dimensions and format before operating
+- Long-running operations (batch processing, large image transforms) must support cancellation
+- Always clean up temporary files in a finally block, even on error paths
+
+## Data Validation
+- Never trust client-supplied Content-Type — verify MIME type from file bytes
+- Validate all numeric parameters have sane bounds (e.g., filter intensity 0–100)
+- Use Zod .transform() for coercion, not manual parsing
+
+## Logging
+- Use structured JSON logging with requestId correlation
+- Log at INFO for request start/complete, WARN for recoverable errors, ERROR for failures
+- Never log image binary data or user file contents

@@ -1,0 +1,28 @@
+---
+description: Adobe Creative Cloud organization-wide engineering standards. Applies to all packages and teams.
+alwaysApply: true
+---
+
+# Adobe Creative Cloud — Global Engineering Standards
+
+## Security (Non-Negotiable)
+- NEVER log PII, credentials, API keys, or file paths containing user data
+- All file uploads must validate MIME type against an allowlist before processing
+- Sanitize all user-provided filenames before any filesystem operation
+- Image data must not persist in memory beyond the request lifecycle
+- No hardcoded secrets — use environment variables for all configuration
+
+## Code Quality
+- TypeScript strict mode required across all packages
+- All exported functions must have JSDoc comments with @param and @returns
+- Meaningful variable names — no single-letter variables outside loop iterators
+- Maximum function length: 40 lines. Extract helpers beyond that threshold.
+
+## Style
+- camelCase for variables and functions, PascalCase for types and classes
+- Barrel exports from each module's index.ts
+- Prefer named exports over default exports
+
+## Commit & PR Standards
+- Use conventional commits: feat:, fix:, chore:, docs:, refactor:
+- PR descriptions must include a "What changed" and "Why" section
