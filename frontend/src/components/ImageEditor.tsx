@@ -4,6 +4,8 @@ import { ImageMetadata } from "../../../shared/types";
 interface ImageEditorProps {
   imageId: string;
   metadata: ImageMetadata;
+  /** URL to the current stored image bytes (e.g. `/uploads/...`). */
+  previewUrl: string;
   onOpenFilterPanel: () => void;
   onOpenExport: () => void;
 }
@@ -42,9 +44,25 @@ const statusStyle: React.CSSProperties = {
   fontSize: "12px",
 };
 
+const previewWrapStyle: React.CSSProperties = {
+  marginTop: "8px",
+  border: "1px solid #e5e5e5",
+  borderRadius: "4px",
+  padding: "8px",
+  backgroundColor: "#fafafa",
+};
+
+const previewImageStyle: React.CSSProperties = {
+  maxWidth: "100%",
+  maxHeight: "220px",
+  objectFit: "contain",
+  display: "block",
+};
+
 export const ImageEditor: React.FC<ImageEditorProps> = ({
   imageId,
   metadata,
+  previewUrl,
   onOpenFilterPanel,
   onOpenExport,
 }) => {
@@ -134,6 +152,15 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({
           <span style={labelStyle}>Filename:</span>
           <span>{metadata.filename}</span>
         </div>
+      </div>
+
+      <div style={previewWrapStyle}>
+        <img
+          key={`${metadata.filename}-${String(metadata.updatedAt)}`}
+          src={previewUrl}
+          alt={`Preview of ${metadata.originalName || metadata.filename}`}
+          style={previewImageStyle}
+        />
       </div>
 
       <div style={buttonRowStyle}>

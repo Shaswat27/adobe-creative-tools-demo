@@ -5,6 +5,7 @@ import { ImageEditor } from "./components/ImageEditor";
 import { FilterPanel } from "./components/FilterPanel";
 import { BatchUploader } from "./components/BatchUploader";
 import { ExportDialog } from "./components/ExportDialog";
+import { getImageFileUrl } from "./utils/imageUrl";
 
 const containerStyle: React.CSSProperties = {
   fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
@@ -84,6 +85,18 @@ export const App: React.FC = () => {
     }
   }, [images, selectedImage]);
 
+  const selectedImageId = selectedImage?.id ?? null;
+  useEffect(() => {
+    if (!selectedImageId) return;
+    const next = images.find((img) => img.id === selectedImageId);
+    if (next) {
+      setSelectedImage((prev) => {
+        if (!prev || prev.id !== selectedImageId) return prev;
+        return next;
+      });
+    }
+  }, [images, selectedImageId]);
+
   const handleUploadComplete = async () => {
     await refreshImages();
   };
@@ -108,6 +121,12 @@ export const App: React.FC = () => {
       setBatchJobs((prev) =>
         prev.map((job) => (job.id === status.job.id ? status.job : job))
       );
+      if (
+        status.job.status === "completed" ||
+        status.job.status === "failed"
+      ) {
+        await refreshImages();
+      }
     } catch {
       // ignore for now
     }
@@ -187,6 +206,7 @@ export const App: React.FC = () => {
             <ImageEditor
               imageId={selectedImage.id}
               metadata={selectedImage}
+              previewUrl={getImageFileUrl(selectedImage.filename)}
               onOpenFilterPanel={() => setShowFilterPanelFor(selectedImage.id)}
               onOpenExport={() => setShowExportFor(selectedImage.id)}
             />
@@ -240,6 +260,7 @@ export const App: React.FC = () => {
       {activeImageId && showFilterPanelFor === activeImageId && (
         <FilterPanel
           imageId={activeImageId}
+          applyFilter={applyFilter}
           onFilterApplied={() => {
             setShowFilterPanelFor(null);
             refreshImages();

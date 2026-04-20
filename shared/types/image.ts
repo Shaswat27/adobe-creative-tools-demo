@@ -62,4 +62,6 @@ export interface ProcessingResult {
   outputFilename?: string;
   error?: string;
   processingTimeMs: number;
+  /** Present when processing succeeded and stored metadata was refreshed. */
+  updatedMetadata?: ImageMetadata;
 }

@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { FilterType } from "../../../shared/types";
-import { useImageProcessor } from "../hooks/useImageProcessor";
+import { FilterConfig, FilterType } from "../../../shared/types";
 
 interface FilterPanelProps {
   imageId: string;
+  applyFilter: (imageId: string, filters: FilterConfig[]) => Promise<void>;
   onFilterApplied: () => void;
 }
 
@@ -76,9 +76,9 @@ const filterTypes: FilterType[] = [
 
 export const FilterPanel: React.FC<FilterPanelProps> = ({
   imageId,
+  applyFilter,
   onFilterApplied,
 }) => {
-  const { applyFilter } = useImageProcessor();
   const [filterType, setFilterType] = useState<FilterType>("grayscale");
   const [intensity, setIntensity] = useState<number>(60);
   const [submitting, setSubmitting] = useState(false);
