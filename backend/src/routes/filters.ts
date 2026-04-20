@@ -23,6 +23,9 @@ filtersRouter.post(
       }
 
       const result = await processImage(image, payload.filters);
+      if (result.success && result.updatedMetadata) {
+        storageService.save(result.updatedMetadata);
+      }
       res.json(result);
     } catch (error) {
       next(error);

@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 
+import { uploadDirectory } from "./constants/paths.js";
 import { batchRouter } from "./routes/batch.js";
 import { filtersRouter } from "./routes/filters.js";
 import { imagesRouter } from "./routes/images.js";
@@ -12,6 +13,7 @@ const port = 3001;
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
+app.use("/uploads", express.static(uploadDirectory, { index: false, fallthrough: false }));
 
 // Kept global for demo stability; auth middleware remains available but not auto-mounted.
 app.use(rateLimitMiddleware);
